@@ -1,67 +1,80 @@
 import {
-  JupyterFrontEnd,
-  JupyterFrontEndPlugin
+  JupyterFrontEnd, JupyterFrontEndPlugin
 } from '@jupyterlab/application';
+import { INotebookTracker } from '@jupyterlab/notebook';
 import { NotebookPanel } from '@jupyterlab/notebook';
+import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
+import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { NotebookModel } from '@jupyterlab/notebook/lib/model';
-import { Context } from '@jupyterlab/docregistry';
 import { SessionContext } from '@jupyterlab/apputils';
 
-    // Listen for messages from the parent window
+/**
+ * Initialization data for the iframe-message-listener extension.
+ */
+const extension: JupyterFrontEndPlugin<void> = {
+  id: 'iframe-message-listener',
+  autoStart: true,
+  requires: [IRenderMimeRegistry],
+  activate: (app: JupyterFrontEnd, rendermime: IRenderMimeRegistry) => {
+    console.log('JupyterLab extension iframe-message-listener is activated!');
+
+    // Add your window message listener here
     window.addEventListener("message", (event) => {
       const { jwt, documentId } = event.data;
 
-      // Ensure that the message comes from the expected origin
-      if (event.origin !== 'https://rr.alkemata.com') {
-          return;
+      // Ensure the message comes from the expected origin
+      if (event.origin !== 'https://your-parent-domain.com') {
+        return;
       }
 
-      // Call the API to fetch the notebook content
+      // Fetch the notebook data with the JWT and documentId
       fetchNotebookData(jwt, documentId);
-  }, false);
+    }, false);
 
-  function fetchNotebookData(jwt: string, documentId: string) {
-      // Make an API call using the JWT and document ID
-      fetch(`https://rr.alkemata.com/api/notebooks/${documentId}`, {
-          method: 'GET',
-          headers: {
-              'Authorization': `Bearer ${jwt}`
-          }
+    /**
+     * Fetch notebook data from API
+     */
+    function fetchNotebookData(jwt: string, documentId: string) {
+      fetch(`https://your-api.com/notebooks/${documentId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${jwt}`
+        }
       })
       .then(response => response.json())
       .then(notebookData => {
-          // Render notebook in JupyterLab
-          renderNotebook(notebookData);
+        // Render notebook in JupyterLab
+        renderNotebook(notebookData);
       })
       .catch(error => {
-          console.error("Error fetching notebook data:", error);
+        console.error("Error fetching notebook data:", error);
       });
-  }
+    }
 
-// Render notebook with NotebookPanel
-function renderNotebook(notebookData: any) {
-    const content = { cells: notebookData.cells, metadata: notebookData.metadata };
+    /**
+     * Render the fetched notebook in JupyterLab
+     */
+    function renderNotebook(notebookData: any) {
+      // Create a new notebook model
+      const model = new NotebookModel();
+      model.fromJSON(notebookData);
 
-    const model = new NotebookModel({ content });
-    const context = new Context({ model, sessionContext: new SessionContext({ name: 'session' }) });
+      // Create a new context for the notebook
+      const context = new DocumentRegistry.Context({
+        model,
+        sessionContext: new SessionContext({ name: 'iframe-session' }),
+      });
 
-    const notebookPanel = new NotebookPanel({ context });
-    
-    // Add notebookPanel to the JupyterLab shell
-    app.shell.add(notebookPanel, 'main');
-    notebookPanel.context.model.fromJSON(notebookData);
-}
+      // Create the Notebook panel
+      const notebookPanel = new NotebookPanel({
+        context,
+        rendermime,
+      });
 
-/**
- * Initialization data for the jupyter_flask_extension extension.
- */
-const plugin: JupyterFrontEndPlugin<void> = {
-  id: 'jupyter_flask_extension:plugin',
-  description: 'A JupyterLab extension.for flask',
-  autoStart: true,
-  activate: (app: JupyterFrontEnd) => {
-    console.log('JupyterLab extension jupyter_flask_extension is activated!');
+      // Add the notebook to the JupyterLab main area
+      app.shell.add(notebookPanel, 'main');
+    }
   }
 };
 
-export default plugin;
+export default extension;
