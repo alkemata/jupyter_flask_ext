@@ -19,7 +19,7 @@ const extension: JupyterFrontEndPlugin<void> = {
   autoStart: true,
   requires: [IDocumentManager, INotebookTracker],
   activate: (app: JupyterFrontEnd, docManager: IDocumentManager, notebookTracker: INotebookTracker) => {
-    console.log('JupyterLab extension json-message-extension is activated!');
+    console.log('JupyterLab extension json-message-extension is activated!!');
 
     app.restored.then(() => {
       // Wait until JupyterLab UI is ready
