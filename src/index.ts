@@ -20,29 +20,29 @@ const extension: JupyterFrontEndPlugin<void> = {
 
     // Add your window message listener here
     window.addEventListener("message", (event) => {
-      const { jwt, documentId } = event.data;
+      const { documentId } = event.data;
 
       // Ensure the message comes from the expected origin
-      if (event.origin !== 'https://your-parent-domain.com') {
+      if (event.origin !== 'https://rr.alkemata.com') {
+        console.log('Erreor: wrong parent origin');
         return;
       }
 
       // Fetch the notebook data with the JWT and documentId
-      fetchNotebookData(jwt, documentId);
+      console.log('Message received from parent ', documentId)
+      fetchNotebookData(documentId);
     }, false);
 
     /**
      * Fetch notebook data from API
      */
     function fetchNotebookData(jwt: string, documentId: string) {
-      fetch(`https://your-api.com/notebooks/${documentId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${jwt}`
-        }
+      fetch(`https://rr.alkemata.com/api/notebooks/${documentId}`, {
+        method: 'GET'
       })
       .then(response => response.json())
       .then(notebookData => {
+        console.log(notebookData)
         // Render notebook in JupyterLab
         renderNotebook(notebookData);
       })
