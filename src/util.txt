@@ -1,1 +1,2 @@
+docker-compose exec jupyterlite_app sh
 jlpm run build
