@@ -23,11 +23,12 @@ const extension: JupyterFrontEndPlugin<void> = {
 
     app.restored.then(() => {
       // Wait until JupyterLab UI is ready
-
+      console.log('waiting for message')
       window.addEventListener('message', async (event) => {
         if (event.origin !== window.origin) return; // Secure check
 
         const { id } = event.data;
+        console.log('==========',id)
 
         if (id) {
           try {
