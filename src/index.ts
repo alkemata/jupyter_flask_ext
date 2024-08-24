@@ -11,8 +11,6 @@ import {
   INotebookTracker
 } from '@jupyterlab/notebook';
 
-import { NotebookPanel } from '@jupyterlab/notebook';
-
 /**
  * Initialization data for the json-message-extension.
  */
