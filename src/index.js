@@ -1,4 +1,4 @@
-async function activate(app, menu) {
+async function activate(app) {
 
   window.addEventListener("message", (event) => {
     const { documentId } = event.data;
