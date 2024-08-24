@@ -30,13 +30,13 @@ const extension: JupyterFrontEndPlugin<void> = {
 
       // Fetch the notebook data with the JWT and documentId
       console.log('Message received from parent ', documentId)
-      fetchNotebookData(documentId);
+      //fetchNotebookData(documentId);
     }, false);
 
     /**
      * Fetch notebook data from API
      */
-    function fetchNotebookData(jwt: string, documentId: string) {
+   /*  function fetchNotebookData(jwt: string, documentId: string) {
       fetch(`https://rr.alkemata.com/api/notebooks/${documentId}`, {
         method: 'GET'
       })
@@ -54,7 +54,7 @@ const extension: JupyterFrontEndPlugin<void> = {
     /**
      * Render the fetched notebook in JupyterLab
      */
-    function renderNotebook(notebookData: any) {
+/*     function renderNotebook(notebookData: any) {
       // Create a new notebook model
       const model = new NotebookModel();
       model.fromJSON(notebookData);
@@ -69,12 +69,12 @@ const extension: JupyterFrontEndPlugin<void> = {
       const notebookPanel = new NotebookPanel({
         context,
         rendermime,
-      });
+      }); */
 
       // Add the notebook to the JupyterLab main area
-      app.shell.add(notebookPanel, 'main');
-    }
-  }
+     // app.shell.add(notebookPanel, 'main');
+    //}
+  //} 
 };
 
 export default extension;
