@@ -54,21 +54,7 @@ const extension: JupyterFrontEndPlugin<void> = {
             
             // Assuming JSON has an array of cells (e.g., code or markdown)
             // Example: { "cells": [ {"cell_type": "code", "source": "print('Hello World')", "metadata": {}}, ... ] }
-            json.cells.forEach((cell: any) => {
-              let notebookCell;
-              if (cell.cell_type === 'code') {
-                notebookCell = notebookContent.model.contentFactory.createCodeCell({});
-                notebookCell.value.text = cell.source;
-              } else if (cell.cell_type === 'markdown') {
-                notebookCell = notebookContent.model.contentFactory.createMarkdownCell({});
-                notebookCell.value.text = cell.source;
-              }
-              // Add the new cell to the notebook
-              notebookContent.model.cells.push(notebookCell);
-            });
-
-            // Save the notebook after populating it
-            await notebookWidget.context.save();
+            
 
           } catch (error) {
             console.error('Error fetching the JSON document or populating the notebook:', error);
