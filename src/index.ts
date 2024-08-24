@@ -37,24 +37,7 @@ const extension: JupyterFrontEndPlugin<void> = {
             const response = await fetch(`http://your-server.com/api/data/${id}`);
             const json = await response.json();
 
-            // Create a new notebook file in JupyterLab
-            const newNotebook = await docManager.newUntitled({
-              path: 'Untitled.ipynb',
-              type: 'notebook'
-            });
-
-            // Open the notebook
-            const notebookWidget = await docManager.openOrReveal(newNotebook.path) as NotebookPanel;
-
-            // Ensure the notebook widget is fully initialized
-            await notebookWidget.context.ready;
-
-            // Populate the notebook with cells based on the JSON content
-            const notebookContent = notebookWidget.content;
-            
-            // Assuming JSON has an array of cells (e.g., code or markdown)
-            // Example: { "cells": [ {"cell_type": "code", "source": "print('Hello World')", "metadata": {}}, ... ] }
-            
+            console.log(json);            
 
           } catch (error) {
             console.error('Error fetching the JSON document or populating the notebook:', error);
