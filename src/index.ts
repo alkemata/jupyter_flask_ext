@@ -20,12 +20,14 @@ const extension: JupyterFrontEndPlugin<void> = {
   requires: [IDocumentManager, INotebookTracker],
   activate: (app: JupyterFrontEnd, docManager: IDocumentManager, notebookTracker: INotebookTracker) => {
     console.log('JupyterLab extension json-message-extension is activated!!');
+    window.parent.postMessage("ready", "https://rr.alkemata.com");
 
     app.restored.then(() => {
       // Wait until JupyterLab UI is ready
       console.log('waiting for message')
       window.addEventListener('message', async (event) => {
-        if (event.origin !== window.origin) return; // Secure check
+        console.log(event)
+        if (event.origin !== "https://rr.alkemata.com") return; // Secure check
 
         const { id } = event.data;
         console.log('==========',id)
