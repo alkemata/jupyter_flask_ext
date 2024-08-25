@@ -36,7 +36,11 @@ const extension: JupyterFrontEndPlugin<void> = {
         if (id) {
           try {
             // Fetch the JSON document from the server
-            const response = await fetch(`https://rr.alkemata.com/api/notebooks/${id}`);
+            const response = await fetch(`https://rr.alkemata.com/api/notebooks/${id}`, {
+              method: 'GET',
+              // Important: Ensure cookies are included in the request
+              credentials: 'include'
+            });
             console.log(response)
             const json = await response.json();
 
