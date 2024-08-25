@@ -52,14 +52,14 @@ const extension: JupyterFrontEndPlugin<void> = {
               type: 'file',
               ext: 'notebook'
             });
-
+            newNotebook.fromString(notebook)
             const notebookWidget = await docManager.openOrReveal(newNotebook.path) as NotebookPanel;
 
             // Ensure the notebook widget is fully initialized
             await notebookWidget.context.ready;
-            if (notebookWidget.model !== null) {
-            notebookWidget.model.fromString(notebook);
-            }
+            //if (notebookWidget.model !== null) {
+            //notebookWidget.model.fromString(notebook);
+            //}
             // Save the notebook after populating it
             await notebookWidget.context.save();
 
