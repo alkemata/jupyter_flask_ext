@@ -57,22 +57,8 @@ const extension: JupyterFrontEndPlugin<void> = {
 
             // Ensure the notebook widget is fully initialized
             await notebookWidget.context.ready;
-
-            // Populate the notebook with cells based on the JSON content
-            const notebookContent = notebookWidget.content;
-
-            notebook.cells.forEach((cell: any) => {
-              let notebookCell;
-              if (cell.cell_type === 'code') {
-                notebookCell = notebookContent.model.contentFactory.createCodeCell({});
-                notebookCell.value.text = cell.source;
-              } else if (cell.cell_type === 'markdown') {
-                notebookCell = notebookContent.model.contentFactory.createMarkdownCell({});
-                notebookCell.value.text = cell.source;
-              }
-              // Add the new cell to the notebook
-              notebookContent.model.cells.push(notebookCell);
-            });
+            
+            notebookWidget.model.fromString(data.content);
 
             // Save the notebook after populating it
             await notebookWidget.context.save();
