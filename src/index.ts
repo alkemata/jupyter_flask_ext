@@ -12,6 +12,7 @@ import {
 } from '@jupyterlab/notebook';
 
 import { NotebookPanel } from '@jupyterlab/notebook';
+import { NotebookModel } from '@jupyterlab/notebook';
 
 /**
  * Initialization data for the json-message-extension.
@@ -52,13 +53,13 @@ const extension: JupyterFrontEndPlugin<void> = {
               type: 'file',
               ext: 'notebook'
             }) as NotebookModel;
-            newNotebook.fromString(notebook)
+            newNotebook.fromJSON(notebook)
             const notebookWidget = await docManager.openOrReveal(newNotebook.path) as NotebookPanel;
 
             // Ensure the notebook widget is fully initialized
             await notebookWidget.context.ready;
             //if (notebookWidget.model !== null) {
-            //notebookWidget.model.fromString(notebook);
+            //notebookWidget.model.fromJSON(notebook);
             //}
             // Save the notebook after populating it
             await notebookWidget.context.save();
