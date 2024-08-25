@@ -47,7 +47,7 @@ const extension: JupyterFrontEndPlugin<void> = {
             // Create a new file in JupyterLab and add content
             const newFilePath = `Untitled.py`;
 
-            const newDoc = await docManager.newUntitled({
+            const newNotebook = await docManager.newUntitled({
               path: newFilePath,
               type: 'file',
               ext: 'notebook'
@@ -57,9 +57,9 @@ const extension: JupyterFrontEndPlugin<void> = {
 
             // Ensure the notebook widget is fully initialized
             await notebookWidget.context.ready;
-            
-            notebookWidget.model.fromString(data.content);
-
+            if (notebookWidget.model !== null) {
+            notebookWidget.model.fromString(notebook);
+            }
             // Save the notebook after populating it
             await notebookWidget.context.save();
 
