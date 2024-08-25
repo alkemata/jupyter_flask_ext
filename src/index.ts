@@ -30,7 +30,7 @@ const extension: JupyterFrontEndPlugin<void> = {
         console.log(event)
         if (event.origin !== "https://rr.alkemata.com") return; // Secure check
 
-        const { id } = event.data;
+        const id  = event.data.documentId;
         console.log('==========',id)
 
         if (id) {
