@@ -11,6 +11,8 @@ import {
   INotebookTracker
 } from '@jupyterlab/notebook';
 
+import { NotebookPanel } from '@jupyterlab/notebook';
+
 /**
  * Initialization data for the json-message-extension.
  */
@@ -43,14 +45,37 @@ const extension: JupyterFrontEndPlugin<void> = {
             });
             const notebook = await response.json();
             // Create a new file in JupyterLab and add content
-            const newFilePath = `Untitled.json`;
+            const newFilePath = `Untitled.py`;
 
             const newDoc = await docManager.newUntitled({
               path: newFilePath,
               type: 'file',
-              ext: 'json'
+              ext: 'notebook'
             });
-            const fileWidget = await docManager.openOrReveal(newDoc.path);       
+
+            const notebookWidget = await docManager.openOrReveal(newNotebook.path) as NotebookPanel;
+
+            // Ensure the notebook widget is fully initialized
+            await notebookWidget.context.ready;
+
+            // Populate the notebook with cells based on the JSON content
+            const notebookContent = notebookWidget.content;
+
+            notebook.cells.forEach((cell: any) => {
+              let notebookCell;
+              if (cell.cell_type === 'code') {
+                notebookCell = notebookContent.model.contentFactory.createCodeCell({});
+                notebookCell.value.text = cell.source;
+              } else if (cell.cell_type === 'markdown') {
+                notebookCell = notebookContent.model.contentFactory.createMarkdownCell({});
+                notebookCell.value.text = cell.source;
+              }
+              // Add the new cell to the notebook
+              notebookContent.model.cells.push(notebookCell);
+            });
+
+            // Save the notebook after populating it
+            await notebookWidget.context.save();
 
           } catch (error) {
             console.error('Error fetching the JSON document or populating the notebook:', error);
