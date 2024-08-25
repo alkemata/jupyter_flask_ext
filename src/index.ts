@@ -51,7 +51,7 @@ const extension: JupyterFrontEndPlugin<void> = {
               path: newFilePath,
               type: 'file',
               ext: 'notebook'
-            });
+            }) as NotebookModel;
             newNotebook.fromString(notebook)
             const notebookWidget = await docManager.openOrReveal(newNotebook.path) as NotebookPanel;
 
