@@ -45,7 +45,7 @@ const extension: JupyterFrontEndPlugin<void> = {
             });
             const notebook = await response.json();
             // Create a new file in JupyterLab and add content
-            const newFilePath = `Untitled.py`;
+            const newFilePath = `Untitled.ipynb`;
 
             const newNotebook = await docManager.newUntitled({
               path: newFilePath,
