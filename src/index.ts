@@ -46,15 +46,15 @@ const extension: JupyterFrontEndPlugin<void> = {
             const notebook = await response.json();
             // Create a new file in JupyterLab and add content
             const newFilePath = `Untitled.ipynb`;
-
+            console.log('Create newnotebook')
             const newNotebook = await docManager.newUntitled({
               path: newFilePath,
               type: 'file',
               ext: 'notebook'
             });
-
+            console.log('create notebookwidget')
             const notebookWidget = await docManager.openOrReveal(newNotebook.path) as NotebookPanel;
-
+            console.log('populate notebook')
             // Ensure the notebook widget is fully initialized
             await notebookWidget.context.ready;
             if (notebookWidget.model !== null) {
