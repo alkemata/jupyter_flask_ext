@@ -24,7 +24,7 @@ const extension: JupyterFrontEndPlugin<void> = {
 
     app.restored.then(() => {
       // Wait until JupyterLab UI is ready
-      window.parent.postMessage("ready", "https://rr.alkemata.com");
+
       console.log('waiting for message')
       window.addEventListener('message', async (event) => {
         console.log(event)
@@ -46,6 +46,7 @@ const extension: JupyterFrontEndPlugin<void> = {
           }
         }
       });
+      window.parent.postMessage("ready", "https://rr.alkemata.com");
     });
   }
 };
