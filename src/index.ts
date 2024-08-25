@@ -41,10 +41,16 @@ const extension: JupyterFrontEndPlugin<void> = {
               // Important: Ensure cookies are included in the request
               credentials: 'include'
             });
-            console.log(response)
-            const json = await response.json();
+            const notebook = await response.json();
+            // Create a new file in JupyterLab and add content
+            const newFilePath = `Untitled.json`;
 
-            console.log(json);            
+            const newDoc = await docManager.newUntitled({
+              path: newFilePath,
+              type: 'file',
+              ext: 'json'
+            });
+            const fileWidget = await docManager.openOrReveal(newDoc.path);       
 
           } catch (error) {
             console.error('Error fetching the JSON document or populating the notebook:', error);
