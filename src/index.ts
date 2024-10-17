@@ -38,12 +38,12 @@ const extension: JupyterFrontEndPlugin<void> = {
         if (id) {
           try {
             // Fetch the JSON document from the server
-            const response = await fetch(`https://rr.alkemata.com/api/notebooks/${id}`, {
+            const response = await fetch(`https://rr.alkemata.com/api/notebooks/query/${id}`, {
               method: 'GET',
               // Important: Ensure cookies are included in the request
               credentials: 'include'
             });
-            const notebook = await response.json();
+            const notebook = await response.json().notebook;
 
             const notebookWidget: NotebookPanel = await app.commands.execute(
               'notebook:create-new',
