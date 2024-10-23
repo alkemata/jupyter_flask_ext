@@ -43,7 +43,8 @@ const extension: JupyterFrontEndPlugin<void> = {
               // Important: Ensure cookies are included in the request
               credentials: 'include'
             });
-            const notebook = (await response.json).notebook;
+            const data= await response.json();
+            const notebook=data.notebook;
 
             const notebookWidget: NotebookPanel = await app.commands.execute(
               'notebook:create-new',
