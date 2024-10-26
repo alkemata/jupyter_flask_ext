@@ -68,7 +68,7 @@ const extension: JupyterFrontEndPlugin<void> = {
 
  //===================================================
  if (msgtype === "publish") {
-
+  const id  = event.data.documentId;
   const currentWidget = app.shell.currentWidget;
   if (!currentWidget) {
     console.warn('No current widget found.');
@@ -88,7 +88,32 @@ if (currentWidget instanceof NotebookPanel) {
 
   // Serialize the notebook content to JSON format
   const notebookJSON = notebookModel.toJSON();
-  console.log(notebookJSON);
+  const params = {
+    notebook: notebookJSON
+  };
+
+  const url=`https://rr.alkemata.com/api/notebooks/save/${id}`
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params) // Serialize parameters into JSON format
+    });
+
+    if (!response.ok) {  
+      window.parent.postMessage("error", "https://rr.alkemata.com");
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    // Parse the response JSON
+    window.parent.postMessage("ok", "https://rr.alkemata.com");
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+  
 }
  }
 
