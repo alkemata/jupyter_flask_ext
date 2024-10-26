@@ -11,7 +11,7 @@ import {
   INotebookTracker
 } from '@jupyterlab/notebook';
 
-import { NotebookPanel } from '@jupyterlab/notebook';
+import { NotebookPanel,INotebookModel } from '@jupyterlab/notebook';
 
 /**
  * Initialization data for the json-message-extension.
@@ -27,7 +27,7 @@ const extension: JupyterFrontEndPlugin<void> = {
     app.restored.then(() => {
       // Wait until JupyterLab UI is ready
 
-      console.log('waiting for message')
+      console.log('waiting for message');
       window.addEventListener('message', async (event) => {
         console.log(event)
         if (event.origin !== "https://rr.alkemata.com") return; // Secure check
@@ -64,6 +64,33 @@ const extension: JupyterFrontEndPlugin<void> = {
         }
       });
       window.parent.postMessage("ready", "https://rr.alkemata.com");
+
+ //===================================================
+      window.addEventListener('publishNotebook', async (event) => {
+        console.log(event)
+        if (event.origin !== "https://rr.alkemata.com") return; // Secure check
+          const currentWidget = app.shell.currentWidget;
+          if (!currentWidget) {
+            console.warn('No current widget found.');
+            return;
+          }
+                  // Check if the widget is a NotebookPanel
+        if (currentWidget instanceof NotebookPanel) {
+          const notebookPanel = currentWidget as NotebookPanel;
+          await notebookPanel.context.ready;
+
+          // Get the notebook content as JSON
+          const notebookModel = notebookPanel.content.model as INotebookModel;
+          if (!notebookModel) {
+            console.warn('No notebook model found.');
+            return;
+          }
+
+          // Serialize the notebook content to JSON format
+          const notebookJSON = notebookModel.toJSON();
+          console.log(notebookJSON);
+        }
+      });
     });
   }
 };

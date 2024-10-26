@@ -1,5 +1,19 @@
+go to jupyterlab_flask
+et puis jupyterlab_ext
+gestion du git ici
+
+aller dans le repertoire jupyterlab_flask
 docker-compose exec jupyterlite_app sh
+cd ..
+cd jupyterlab_ext
+jlpm install
 jlpm run build
 
 jupyter labextension develop --overwrite .
 
+change directory to jupyterlite
+delete _output first
+jupyter lite build
+and i get _output
+
+copy _output from jupyterlite to reasonreport
