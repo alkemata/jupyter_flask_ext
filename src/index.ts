@@ -32,65 +32,69 @@ const extension: JupyterFrontEndPlugin<void> = {
         console.log(event)
         if (event.origin !== "https://rr.alkemata.com") return; // Secure check
 
-        const id  = event.data.documentId;
-        console.log('==========',id)
+        const msgtype=event.data.msgtype;
+        if (msgtype === "create") {
+          const id  = event.data.documentId;
+          console.log('==========',id)
 
-        if (id) {
-          try {
-            // Fetch the JSON document from the server
-            const response = await fetch(`https://rr.alkemata.com/api/notebooks/query/${id}`, {
-              method: 'GET',
-              // Important: Ensure cookies are included in the request
-              credentials: 'include'
-            });
-            const data= await response.json();
-            const notebook=data.notebook;
+          if (id) {
+            try {
+              // Fetch the JSON document from the server
+              const response = await fetch(`https://rr.alkemata.com/api/notebooks/query/${id}`, {
+                method: 'GET',
+                // Important: Ensure cookies are included in the request
+                credentials: 'include'
+              });
+              const data= await response.json();
+              const notebook=data.notebook;
 
-            const notebookWidget: NotebookPanel = await app.commands.execute(
-              'notebook:create-new',
-              { kernelName: 'python3', activate: true });
-            console.log('populate notebook');
-            // Ensure the notebook widget is fully initialized
-            await notebookWidget.context.ready;
-            if (notebookWidget.model !== null) {
-            notebookWidget.model.fromJSON(notebook);
+              const notebookWidget: NotebookPanel = await app.commands.execute(
+                'notebook:create-new',
+                { kernelName: 'python3', activate: true });
+              console.log('populate notebook');
+              // Ensure the notebook widget is fully initialized
+              await notebookWidget.context.ready;
+              if (notebookWidget.model !== null) {
+              notebookWidget.model.fromJSON(notebook);
+              }
+              // Save the notebook after populating it
+              await notebookWidget.context.save();
+
+            } catch (error) {
+              console.error('Error fetching the JSON document or populating the notebook:', error);
             }
-            // Save the notebook after populating it
-            await notebookWidget.context.save();
-
-          } catch (error) {
-            console.error('Error fetching the JSON document or populating the notebook:', error);
           }
         }
-      });
-      window.parent.postMessage("ready", "https://rr.alkemata.com");
 
  //===================================================
-      window.addEventListener('publishNotebook', async (event) => {
-        console.log(event)
-        if (event.origin !== "https://rr.alkemata.com") return; // Secure check
-          const currentWidget = app.shell.currentWidget;
-          if (!currentWidget) {
-            console.warn('No current widget found.');
-            return;
-          }
-                  // Check if the widget is a NotebookPanel
-        if (currentWidget instanceof NotebookPanel) {
-          const notebookPanel = currentWidget as NotebookPanel;
-          await notebookPanel.context.ready;
+ if (msgtype === "publish") {
 
-          // Get the notebook content as JSON
-          const notebookModel = notebookPanel.content.model as INotebookModel;
-          if (!notebookModel) {
-            console.warn('No notebook model found.');
-            return;
-          }
+  const currentWidget = app.shell.currentWidget;
+  if (!currentWidget) {
+    console.warn('No current widget found.');
+    return;
+  }
+          // Check if the widget is a NotebookPanel
+if (currentWidget instanceof NotebookPanel) {
+  const notebookPanel = currentWidget as NotebookPanel;
+  await notebookPanel.context.ready;
 
-          // Serialize the notebook content to JSON format
-          const notebookJSON = notebookModel.toJSON();
-          console.log(notebookJSON);
-        }
-      });
+  // Get the notebook content as JSON
+  const notebookModel = notebookPanel.content.model as INotebookModel;
+  if (!notebookModel) {
+    console.warn('No notebook model found.');
+    return;
+  }
+
+  // Serialize the notebook content to JSON format
+  const notebookJSON = notebookModel.toJSON();
+  console.log(notebookJSON);
+}
+ }
+
+        });
+        window.parent.postMessage("ready", "https://rr.alkemata.com");
+ 
     });
   }
 };
