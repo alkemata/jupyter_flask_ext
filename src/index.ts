@@ -91,16 +91,16 @@ if (currentWidget instanceof NotebookPanel) {
   const params = {
     notebook: notebookJSON
   };
-
-  const url=`https://rr.alkemata.com/api/notebooks/save/${id}`
-
+  const JSONparams=JSON.stringify(params) ;
+  const url=`https://rr.alkemata.com/api/notebooks/save/${id}`;
+  console.log(JSONparams);
   try {
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(params) // Serialize parameters into JSON format
+      body: JSONparams // Serialize parameters into JSON format
     });
 
     if (!response.ok) {  
