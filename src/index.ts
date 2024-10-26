@@ -12,6 +12,26 @@ import {
 } from '@jupyterlab/notebook';
 
 import { NotebookPanel,INotebookModel } from '@jupyterlab/notebook';
+import { showDialog, Dialog } from '@jupyterlab/apputils';
+
+function showMessage(message: string) {
+  showDialog({
+    title: 'Information',
+    body: message,
+    buttons: [
+      Dialog.okButton({ label: 'OK' })
+    ]
+  }).then(result => {
+    if (result.button.accept) {
+      console.log('OK button was clicked');
+    }
+  });
+}
+
+// Example usage, e.g., in your extension's activate function
+const activate = (app: JupyterFrontEnd) => {
+  showMessage();
+};
 
 /**
  * Initialization data for the json-message-extension.
@@ -51,7 +71,6 @@ const extension: JupyterFrontEndPlugin<void> = {
               const notebookWidget: NotebookPanel = await app.commands.execute(
                 'notebook:create-new',
                 { kernelName: 'python3', activate: true });
-              console.log('populate notebook');
               // Ensure the notebook widget is fully initialized
               await notebookWidget.context.ready;
               if (notebookWidget.model !== null) {
@@ -61,7 +80,7 @@ const extension: JupyterFrontEndPlugin<void> = {
               await notebookWidget.context.save();
 
             } catch (error) {
-              console.error('Error fetching the JSON document or populating the notebook:', error);
+              showMessage('Error fetching the JSON document or populating the notebook:${error}');
             }
           }
         }
@@ -105,11 +124,11 @@ if (currentWidget instanceof NotebookPanel) {
 
     if (!response.ok) {  
       window.parent.postMessage("error", "https://rr.alkemata.com");
+      showMessage('There are probably missing data in the notebook')
       throw new Error(`Error: ${response.statusText}`);
     }
 
     // Parse the response JSON
-    console.log(response)
     window.parent.postMessage("ok", "https://rr.alkemata.com");
   } catch (error) {
     console.error('Error fetching data:', error);
