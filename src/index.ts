@@ -109,6 +109,7 @@ if (currentWidget instanceof NotebookPanel) {
     }
 
     // Parse the response JSON
+    console.log(response)
     window.parent.postMessage("ok", "https://rr.alkemata.com");
   } catch (error) {
     console.error('Error fetching data:', error);
