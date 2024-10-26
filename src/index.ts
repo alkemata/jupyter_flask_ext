@@ -28,10 +28,6 @@ function showMessage(message: string) {
   });
 }
 
-// Example usage, e.g., in your extension's activate function
-const activate = (app: JupyterFrontEnd) => {
-  showMessage();
-};
 
 /**
  * Initialization data for the json-message-extension.
