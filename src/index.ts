@@ -107,8 +107,14 @@ if (currentWidget instanceof NotebookPanel) {
     notebook: notebookJSON
   };
   const JSONparams=JSON.stringify(params) ;
-  const url=`https://rr.alkemata.com/api/notebooks/save/${id}`;
-  console.log(JSONparams);
+  const url_edit=`https://rr.alkemata.com/api/notebooks/save/${id}`;
+  const url_create=`https://rr.alkemata.com/api/notebooks/create/${id}`;
+
+  var url=url_edit;
+  if(id==-1) {
+     url    =url_create;
+  }
+  
   try {
     const response = await fetch(url, {
       method: 'PUT',
@@ -120,7 +126,7 @@ if (currentWidget instanceof NotebookPanel) {
 
     if (!response.ok) {  
       window.parent.postMessage("error", "https://rr.alkemata.com");
-      showMessage('There are probably missing data in the notebook')
+      showMessage('There are probably missing data in the notebook: ${response.statusText}')
       throw new Error(`Error: ${response.statusText}`);
     }
 
