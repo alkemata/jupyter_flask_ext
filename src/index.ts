@@ -108,7 +108,7 @@ if (currentWidget instanceof NotebookPanel) {
   };
   const JSONparams=JSON.stringify(params) ;
   const url_edit=`https://rr.alkemata.com/api/notebooks/save/${id}`;
-  const url_create=`https://rr.alkemata.com/api/notebooks/create/${id}`;
+  const url_create=`https://rr.alkemata.com/api/notebooks/create`;
 
   var url=url_edit;
   if(id==-1) {
@@ -131,7 +131,7 @@ if (currentWidget instanceof NotebookPanel) {
     }
 
     // Parse the response JSON
-    window.parent.postMessage("ok", "https://rr.alkemata.com");
+    window.parent.postMessage(response.notebook_id, "https://rr.alkemata.com");
   } catch (error) {
     console.error('Error fetching data:', error);
   }
